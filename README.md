@@ -1,5 +1,8 @@
 A pattern for sharing private keys for a cluster among a team.
-This post assumes a basic understanding of Ansible and AWS-EC2 Ansible modules.
+
+This post assumes a basic understanding of Ansible and AWS-EC2 Ansible modules as well as a working AWS account with boto configured.
+http://boto.cloudhackers.com/en/latest/boto_config_tut.html
+
 For this example we will be using ansible-vault to encrypt our private keys so that they can be shared with any SCM tool
 
 Benefits:
@@ -11,15 +14,23 @@ Caveats:
 - Must still manually distribute vault-key file to trusted individuals
 - Must trust ansible-vault for symmetric key encryption
 
-Note: For simplicity, this playbook utilizes ansible tags to specify which part of the playbook to run. If no tags are passed, the playbook will launch an ec2 instance, cycle the keys, and then destroy the ec2 instance.  A single part of the play can be run using the `--tags` command line option. (launch, cycle, destroy)
+This playbook was created with Ansible 2.2.0
 
-This example was developed using Ansible 2.2.0
+#### Running the playbook
+1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  This key should
+never be committed to source control
+`date | md5 > ./keys/vault-key.txt && chmod 600 keys/vault-key.txt`
 
-1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  This key should never be committed to source control
-`date | md5 > keys/vault-key.txt && chmod 600 keys/vault-key.txt`
+2. To run the playbook use:
+`ansible-playbook ./example_main.yml -e env=dev`
+This will create a private key, launch a cluster (using the cluster configuration in group_vars/), and add the hosts to an inventory
+file. This inventory file and the encrypted .vault file can then be committed to source control for use by other team members.
 
-2. 
 
-
-
-Using variables, this example could be extended to support multiple keys and clusters
+#### Next steps
+This example can be extended to support multiple keys and clusters.
+Now, cycling ssh keys regularly is only a matter of creating an ansible role which will:
+1. create a new private key
+2. encrypt the new private key with ansible-vault
+3. replace the old key on each host
+4. upload the new encrypted .vault file to source control where it will be available to anyone with access to your SCM tool

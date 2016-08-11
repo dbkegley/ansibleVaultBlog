@@ -4,4 +4,4 @@ cluster:
   - name: db
     count: 1
   - name: worker
-    count: 2
+    count: 1
