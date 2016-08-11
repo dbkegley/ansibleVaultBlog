@@ -1,0 +1,9 @@
+- name: ec2 key
+  include: key.yml
+  tags:
+    - key
+
+- name: Launch ec2
+  include: ec2.yml
+  tags:
+    - ec2

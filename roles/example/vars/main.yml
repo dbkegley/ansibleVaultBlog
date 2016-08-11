@@ -1,0 +1,6 @@
+---
+# vars file for example role
+  region: "us-east-1"
+  ec2_type: "t2.micro"
+  image_id: "ami-f5f41398"
+  key_name: "ec2-{{ env }}-key"

@@ -1,0 +1,7 @@
+- name:
+  hosts: localhost
+  connection: local
+  vars_files:
+    - group_vars/{{ env }}/main.yml
+  roles:
+    - example

@@ -1,0 +1,55 @@
+---
+  - name: launch ec2 cluster
+    ec2:
+      key_name: "{{ key_name }}"
+      instance_type: "{{ ec2_type }}"
+      image: "{{ image_id }}"
+      region: "{{ region }}"
+      wait: true
+      exact_count: "{{ item.count }}"
+      count_tag:
+        Name: "{{ env }}-{{ item.name }}"
+      instance_tags:
+        Name: "{{ env }}-{{ item.name }}"
+    with_items: "{{ cluster }}"
+    register: ec2_cluster
+
+  - debug: var="{{ item }}"
+    with_items: "{{ ec2_cluster.results }}"
+
+  - debug: var="{{ item }}"
+    with_subelements:
+      - "{{ ec2_cluster.results }}"
+      - tagged_instances
+
+  - name: add hosts for later plays
+    add_host:
+      name: "{{ item[1].public_ip }}"
+      groups: "{{ env }}-cluster"
+      instance_id: "{{ item[1].id }}"
+      ansible_ssh_private_key_file: "keys/{{ key_name }}.pem"
+      ansible_host_key_checking: no
+    when: "{{ item[0].changed == true }}"
+    with_subelements:
+      - "{{ ec2_cluster.results }}"
+      - tagged_instances
+    register: hosts
+
+  - debug: var="{{ item }}"
+    with_items: "{{ hosts.results }}"
+
+  - name: create inventory file
+    template:
+      src: "inventory.j2"
+      dest: "inventory/{{ env }}-cluster"
+
+  - name: write cluster nodes to inventory file
+    lineinfile:
+      state: present
+      regexp: "{{ item[1].public_ip }}"
+      dest: "inventory/{{ env }}-cluster"
+      insertafter: EOF
+      line: "{{ item[1].public_ip }} ansible_ssh_private_key_file=keys/{{ key_name }}.pem"
+    with_subelements:
+      - "{{ ec2_cluster.results }}"
+      - tagged_instances
