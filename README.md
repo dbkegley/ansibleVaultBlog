@@ -1,4 +1,4 @@
-A pattern for sharing private keys for a cluster among a team.
+#### A pattern for sharing cluster private keys among a team.
 
 This post assumes a basic understanding of Ansible and AWS-EC2 Ansible modules as well as a working AWS account with boto configured.
 http://boto.cloudhackers.com/en/latest/boto_config_tut.html
@@ -16,7 +16,7 @@ Caveats:
 
 This playbook was created with Ansible 2.2.0
 
-#### Running the playbook
+#### Getting Started
 1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  This key should
 never be committed to source control
 `date | md5 > ./keys/vault-key.txt && chmod 600 keys/vault-key.txt`
@@ -26,11 +26,13 @@ never be committed to source control
 This will create a private key, launch a cluster (using the cluster configuration in group_vars/), and add the hosts to an inventory
 file. This inventory file and the encrypted .vault file can then be committed to source control for use by other team members.
 
+3. Terminating the cluster is as simple as setting `count: 0` for each node in the cluster using the variable
+definitions in group_vars/
 
 #### Next steps
 This example can be extended to support multiple keys and clusters.
 Now, cycling ssh keys regularly is only a matter of creating an ansible role which will:
 1. create a new private key
-2. encrypt the new private key with ansible-vault
+2. encrypt the new key with ansible-vault
 3. replace the old key on each host
-4. upload the new encrypted .vault file to source control where it will be available to anyone with access to your SCM tool
+4. upload the new encrypted `.vault` file to source control where it will be available to anyone with access to your repository
