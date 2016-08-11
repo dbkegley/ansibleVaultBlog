@@ -17,14 +17,14 @@ Caveats:
 This playbook was created with Ansible 2.2.0
 
 #### Getting Started
-1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  This key should
-never be committed to source control
+1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  __This key should
+never be committed to source control__
 `date | md5 > ./keys/vault-key.txt && chmod 600 keys/vault-key.txt`
 
 2. To run the playbook use:
 `ansible-playbook ./example_main.yml -e env=dev`
 This will create a private key, launch a cluster (using the cluster configuration in group_vars/), and add the hosts to an inventory
-file. This inventory file and the encrypted .vault file can then be committed to source control for use by other team members.
+file. This inventory file and the encrypted `.vault` file can then be committed to source control for use by other team members.
 
 3. Terminating the cluster is as simple as setting `count: 0` for each node in the cluster using the variable
 definitions in group_vars/

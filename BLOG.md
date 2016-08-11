@@ -1,4 +1,4 @@
-#### A pattern for managing clusters in the cloud with ansible vault
+### A pattern for managing clusters in the cloud with ansible vault
 
 If you've ever been tasked with standing up a cluster environment in the cloud, you've probably used a tool like Ansible to make your life a little easier.  By defining the configuration in code, admins can develop their cloud infrastructure in a maintainable and repeatable way.  This allows for iteration through trial and error when developing for cloud.
 
@@ -8,5 +8,8 @@ Ansible provides some useful functionality that can alleviate some of these main
 
 By storing these private keys in a repository, developers are able to access the cluster even if the private key has changed.  We can still cycle the private key frequently without the worry of hindering development.  Should a private key be misplaced, cycling keys is as simple as encrypting a new private key and replacing the old one in source control.
 
-So how is this accomplished?
-...
+##### So how is this accomplished?
+```
+Outline key steps with relevant bits of code
+
+```
