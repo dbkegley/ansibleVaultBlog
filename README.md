@@ -3,7 +3,7 @@
 This post assumes a basic understanding of Ansible and AWS-EC2 Ansible modules as well as a working AWS account with boto configured.
 http://boto.cloudhackers.com/en/latest/boto_config_tut.html
 
-For this example we will be using ansible-vault to encrypt our private keys so that they can be shared with any SCM tool
+For this example we will be using ansible-vault to encrypt our private keys so that they can be shared with any version control tool
 
 Benefits:
 - Cycle private keys without constantly having to share keys with team members
@@ -19,10 +19,10 @@ This playbook was created with Ansible 2.2.0
 #### Getting Started
 1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  __This key should
 never be committed to source control__
-`date | md5 > ./keys/vault-key.txt && chmod 600 keys/vault-key.txt`
+`date | md5 > keys/vault-key.txt && chmod 600 keys/vault-key.txt`
 
 2. To run the playbook use:
-`ansible-playbook ./example_main.yml -e env=dev`
+`ansible-playbook example_main.yml -e env=dev`
 This will create a private key, launch a cluster (using the cluster configuration in group_vars/), and add the hosts to an inventory
 file. This inventory file and the encrypted `.vault` file can then be committed to source control for use by other team members.
 

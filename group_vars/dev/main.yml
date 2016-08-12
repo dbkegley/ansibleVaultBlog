@@ -1,7 +1,7 @@
 cluster:
   - name: web
-    count: 1
+    count: 0
   - name: db
-    count: 1
+    count: 0
   - name: worker
-    count: 1
+    count: 0

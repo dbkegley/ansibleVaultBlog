@@ -21,7 +21,7 @@
       mode: 0600
     when: "{{ ec2_key.changed }}"
 
-  # encrypt the key to a `.vault` file when a new one is created. This file can be saved to SCM
+  # encrypt the key to a `.vault` file when a new one is created. This file can be added to SCM
   - name: encrypt key pair
     command: "ansible-vault encrypt keys/{{ key_name }}.pem --output=keys/{{ key_name }}.vault"
     when: "{{ ec2_key.changed }}"
