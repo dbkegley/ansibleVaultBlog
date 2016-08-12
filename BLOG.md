@@ -1,4 +1,4 @@
-### A pattern for managing clusters in the cloud with ansible vault
+### A Pattern for Managing Clusters in the Cloud with ansible-vault
 
 If you've ever been tasked with standing up a cluster environment in the cloud, you've probably used a tool like Ansible to make your life a little easier.  By defining the configuration in code, admins can develop their cloud infrastructure in a maintainable and repeatable way.  This allows for iteration through trial and error when developing for cloud.
 
@@ -34,7 +34,7 @@ There is now an encrypted `.vault` file in the `keys/` directory.  This is your 
 
 Team members can run `ansible-playbook example_main.yml -e env=dev --tags=key` once they have obtained the `.vault` file (from version control) and the vault-key (from you). This will decrypt the vault file and place the cluster private key in their `keys/` directory
 
-Should a vault-key be misplaced, it may be necessary to change your vault-key file and re-distribute it to your team.  This can be done using the `ansible-vault rekey` command.  You should also cycle your private keys at that time
+Should a vault-key be misplaced, it may be necessary to change your vault-key file and re-distribute it to your team.  This can be done using the `ansible-vault rekey` command.  As an additional security measure, you should also cycle your private keys at that time
 
 This is enough to get your started but there are many ways this concept could be extended to support different use cases.
 

@@ -1,4 +1,4 @@
-#### A pattern for sharing cluster private keys among a team.
+### A Pattern for Managing Clusters in the Cloud with ansible-vault
 
 This post assumes a basic understanding of Ansible and AWS-EC2 Ansible modules as well as a working AWS account with boto configured.
 http://boto.cloudhackers.com/en/latest/boto_config_tut.html
@@ -21,12 +21,14 @@ This playbook was created with Ansible 2.2.0
 never be committed to source control__
 `date | md5 > keys/vault-key.txt && chmod 600 keys/vault-key.txt`
 
-2. To run the playbook use:
+2. Define your cluster in `group_vars`
+
+3. To run the playbook use:
 `ansible-playbook example_main.yml -e env=dev`
 This will create a private key, launch a cluster (using the cluster configuration in group_vars/), and add the hosts to an inventory
 file. This inventory file and the encrypted `.vault` file can then be committed to source control for use by other team members.
 
-3. Terminating the cluster is as simple as setting `count: 0` for each node in the cluster using the variable
+4. Terminating the cluster is as simple as setting `count: 0` for each node in the cluster using the variable
 definitions in group_vars/
 
 #### Next steps
