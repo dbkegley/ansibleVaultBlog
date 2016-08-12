@@ -16,6 +16,9 @@ Caveats:
 
 This playbook was created with Ansible 2.2.0
 
+One thing to note is that I am writing to a static inventory file to track the hosts for the cluster. The recommended approach for this is to use ansible dynamic inventory:
+http://docs.ansible.com/ansible/intro_dynamic_inventory.html
+
 #### Getting Started
 1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  __This key should
 never be committed to source control__
@@ -29,7 +32,7 @@ This will create a private key, launch a cluster (using the cluster configuratio
 file. This inventory file and the encrypted `.vault` file can then be committed to source control for use by other team members.
 
 4. Terminating the cluster is as simple as setting `count: 0` for each node in the cluster using the variable
-definitions in group_vars/
+definitions in `group_vars/`
 
 #### Next steps
 This example can be extended to support multiple keys and clusters.

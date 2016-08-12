@@ -6,7 +6,7 @@ One drawback of developing in this fashion is that it can be difficult to mainta
 
 Ansible provides some useful functionality that can alleviate some of these maintenance woes. Ansible-vault utilizes symmetric key encryption which allows us to store private keys in our repository while still providing an acceptable level of security for our cloud.  Note that you should __never__ store unencrypted private keys in source control.
 
-By storing these private keys in a repository, developers are able to access the cluster even if the private key has changed.  We can still cycle the private key frequently without the worry of hindering development.  Should a private key be misplaced, cycling keys is as simple as encrypting a new private key and replacing the old one in source control.
+By storing these *encrypted* private keys in a repository, developers are able to access the cluster even if the private key has changed.  We can still cycle the private key frequently without the worry of hindering development.  Should a private key be misplaced, cycling keys is as simple as encrypting a new private key and replacing the old one in source control.
 
 ##### So how is this accomplished?
 First, we will generate a random key to use as our vault password file.  This key should only be shared with trusted individuals and it should never be commited to source control.  Generate the key and place it in the `keys/` directory using the following command:
@@ -34,8 +34,53 @@ There is now an encrypted `.vault` file in the `keys/` directory.  This is your 
 
 Team members can run `ansible-playbook example_main.yml -e env=dev --tags=key` once they have obtained the `.vault` file (from version control) and the vault-key (from you). This will decrypt the vault file and place the cluster private key in their `keys/` directory
 
-Should a vault-key be misplaced, it may be necessary to change your vault-key file and re-distribute it to your team.  This can be done using the `ansible-vault rekey` command.  As an additional security measure, you should also cycle your private keys at that time
+The tasks for encrypting, decrypting, and saving the private key are as follows:
 
-This is enough to get your started but there are many ways this concept could be extended to support different use cases.
+First make sure the `keys/` directory exists locally and generate a private key on aws
+```
+- name: make sure keys dir exists
+  file:
+    path: keys/
+    state: directory
+    mode: 0755
 
-The source for this project can be found here: www.link.to.source.github.com
+# This can also be done with the `ssh-keygen` command if you are not using aws
+- name: create ec2 private key
+  ec2_key:
+    region: "{{ region }}"
+    name: "{{ key_name }}"
+    state: present
+  register: ec2_key
+```
+
+If the private key already exists on aws then the contents of the key are not returned, so we only save the private key when a new key is created in aws.  If the key is already present, we know that it should be in source control as an encrypted vault file.
+```
+# save the private key only when a new one is created
+- name: save private key
+  copy:
+    content: "{{ ec2_key.key.private_key }}"
+    dest: "keys/{{ key_name }}.pem"
+    mode: 0600
+  when: "{{ ec2_key.changed }}"
+
+# encrypt the key to a `.vault` file when a new one is created. This file can be added to version control
+- name: encrypt key pair
+  command: "ansible-vault encrypt keys/{{ key_name }}.pem --output=keys/{{ key_name }}.vault"
+  when: "{{ ec2_key.changed }}"
+```
+
+This final task should execute no matter what. The vault file is implicitly decrypted when using the copy module.
+```
+# always decrypt and save the key pair. This is because it may be a new key pair that a different developer put in version control
+- name: decrypt and save key pair
+  copy:
+    src: "keys/{{ key_name }}.vault"
+    dest: "keys/{{ key_name }}.pem"
+    mode: 0600
+```
+
+Should the vault-key be misplaced, it may be necessary to change your vault-key file and re-distribute it to your team.  This can be done using the `ansible-vault rekey` command.  As an additional security measure, you should also cycle your private keys at that time
+
+This is enough to get started but there are many ways this concept could be extended to support different cloud use cases.
+
+The source for this project can be found here: ...

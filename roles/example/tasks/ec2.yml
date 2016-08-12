@@ -43,6 +43,7 @@
       src: "inventory.j2"
       dest: "inventory/{{ env }}-cluster"
 
+  # A better approach for this would be ansible dynamic inventory
   - name: write cluster nodes to inventory file
     lineinfile:
       state: present
