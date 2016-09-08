@@ -1,4 +1,4 @@
-### A Pattern for Managing Clusters in the Cloud with ansible-vault
+### A Pattern for Managing Clusters in the Cloud with Ansible Vault
 
 If you've ever been tasked with standing up a cluster environment in the cloud, you've probably used a tool like Ansible to make your life a little easier.  By defining the configuration in code, admins can develop their cloud infrastructure in a maintainable and repeatable way.  This allows for iteration through trial and error when developing for cloud.
 
@@ -83,4 +83,4 @@ Should the vault-key be misplaced, it may be necessary to change your vault-key 
 
 This is enough to get started but there are many ways this concept could be extended to support different cloud use cases.
 
-The source for this project can be found here: ...
+The source for this project can be found here: https://github.com/dbkegley/ansibleVaultBlog

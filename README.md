@@ -1,4 +1,4 @@
-### A Pattern for Managing Clusters in the Cloud with ansible-vault
+### A Pattern for Managing Clusters in the Cloud with Ansible Vault
 
 This post assumes a basic understanding of Ansible and AWS-EC2 Ansible modules as well as a working AWS account with boto configured.
 http://boto.cloudhackers.com/en/latest/boto_config_tut.html
