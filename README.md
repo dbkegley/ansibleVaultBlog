@@ -24,6 +24,8 @@ http://docs.ansible.com/ansible/intro_dynamic_inventory.html
 never be committed to source control__
 `date | md5 > keys/vault-key.txt && chmod 600 keys/vault-key.txt`
 
+> Update: This isn't a very good way to generate a password, use `cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1` instead to generate a random string. `date | md5` is deterministic, not random.
+
 2. Define your cluster in `group_vars`
 
 3. To run the playbook use:
