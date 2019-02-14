@@ -22,9 +22,7 @@ http://docs.ansible.com/ansible/intro_dynamic_inventory.html
 #### Getting Started
 1. Generate vault-key.txt file in keys/ directory. Share this key with anyone who requires access to the cluster.  __This key should
 never be committed to source control__
-`date | md5 > keys/vault-key.txt && chmod 600 keys/vault-key.txt`
-
-> Update: This isn't a very good way to generate a password, use `cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1` instead to generate a random string. `date | md5` is deterministic, not random.
+`cat /dev/urandom | head -c 1024 | shasum -a256 | awk '{print $1}' > keys/vault-key.txt && chmod 600 keys/vault-key.txt`
 
 2. Define your cluster in `group_vars`
 
